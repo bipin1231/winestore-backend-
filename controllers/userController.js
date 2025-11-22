@@ -1,8 +1,8 @@
 const User = require('../models/user');
-
+const jwt = require('jsonwebtoken');
 
 const loginUser=async (req,res) => {
-console.log(req.body);
+
 
   const {email,password}=req.body;
 
@@ -13,9 +13,22 @@ console.log(req.body);
     const isMatch=await user.matchPassword(password);
      if(!isMatch) return res.status(404).json({message:"Invalid password"});
 
-     res.json({message:"logged in successfully"});
+     const token=jwt.sign(
+      {
+        id:user._id,
+        role:user.role
+      },
+      process.env.JWT_SECRET,
+      {expiresIn:'1d'}
+     )
+     
+     res.cookie('token',token,{
+      httpOnly:true,
+      sameSite:"Strict",
+      maxAge:23*60*60*1000
+     })
 
-
+     res.json({message:"logged in successfully"})
   } catch (error) {
        res.status(500).json({ message: error.message });
   }

@@ -2,7 +2,12 @@ const express = require('express');
 const router = express.Router();
 const { getUsers, createUser ,loginUser} = require('../controllers/userController');
 
-router.get('/', getUsers);
+const {protect,admin}=require("../middlewares/authMiddleware")
+const upload = require('../config/imageUpload');
+
+// //protect thr routes
+// router.get('/',protect,admin, getUsers);
+router.get('/',protect, getUsers);
 router.post('/', createUser);
 router.post('/login',loginUser)
 

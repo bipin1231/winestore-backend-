@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const upload = require('../config/imageUpload');
 const {
     getProduct,
     createProduct,
@@ -11,7 +12,7 @@ const {
 
 router.get('/',getProduct)
 router.get('/:id',findProductById)
-router.post('/',createProduct);
+router.post('/',upload.any(),createProduct);
 router.put('/:id',updateProduct)
 router.post('/:id',addProductVaraint)
 router.delete('/:id',deleteProduct)
