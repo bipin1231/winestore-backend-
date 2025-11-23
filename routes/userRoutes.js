@@ -7,7 +7,7 @@ const upload = require('../config/imageUpload');
 
 // //protect thr routes
 // router.get('/',protect,admin, getUsers);
-router.get('/',protect, getUsers);
+router.get('/', getUsers);
 router.post('/', createUser);
 router.post('/login',loginUser)
 
