@@ -1,6 +1,6 @@
 const mongoose=require("mongoose");
 
-const orderItem=mongoose.Schema({
+const orderItemSchema=mongoose.Schema({
     product:{
       type:mongoose.Schema.ObjectId,
       ref:"Product",
@@ -22,11 +22,11 @@ const orderSchema=mongoose.Schema({
         type:mongoose.Schema.ObjectId,
         ref:'User',
         required:true,
-        unique:true,
      },
      totalPrice:{
         type:Number
-     }
+     },
+     orderItems:[orderItemSchema]
 }, { timestamps: true })
 
 module.exports=mongoose.model("Order",orderSchema)
