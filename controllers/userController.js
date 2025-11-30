@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
-
+const {sendEmail}=require("../config/sendEmail")
 const loginUser=async (req,res) => {
 
 
@@ -50,7 +50,8 @@ const createUser = async (req, res) => {
   const { name, email, password,role } = req.body;
   try {
     const user = new User({ name, email, password });
-    await user.save();
+   sendEmail();
+    // await user.save();
     res.status(201).json(user);
   } catch (err) {
     res.status(400).json({ message: err.message });

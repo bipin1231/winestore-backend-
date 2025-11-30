@@ -60,9 +60,32 @@ const placeOrder = async (req, res) => {
 };
 const getAllOrder=async (req,res)=>{
   try {
-    const orderData=await Order.find();
-    if(orderData) return res.status(200).json(orderData);
-    return res.status(404).json({message:"no order found"});
+    const orderData=await Order.find().populate({
+      path:"orderItems.product",
+      select:"name category variants"
+    });
+    if(!orderData)  return res.status(404).json({message:"no order found"});
+
+    const ordersWithVariants=orderData.map(order=>{
+     const items= order.orderItems.map(item=>{
+      const variant=item.product.variants.find(i=>i._id.equals(item.variantId));
+      return{
+        productName:item.product.name,
+        category:item.product.category,
+        size:variant.size,
+        price:item.price,
+        totalPrice:item.totalPrice,
+        _id:item._id
+
+      }
+     })
+     return {
+      ...order._doc,
+      orderItems:items
+     }
+    })
+    return res.status(200).json(ordersWithVariants)
+   
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
