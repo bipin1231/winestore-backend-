@@ -1,22 +1,25 @@
-import Brevo from "@getbrevo/brevo";
+const Brevo = require("@getbrevo/brevo");
 
-export default async function sendEmail(){
-    try {
+async function sendEmail(email,otp) {
+  try {
     const apiInstance = new Brevo.TransactionalEmailsApi();
-    apiInstance.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
+    apiInstance.setApiKey(
+      Brevo.TransactionalEmailsApiApiKeys.apiKey,
+      process.env.BREVO_API_KEY
+    );
 
     const emailData = {
       sender: { name: "Store", email: "bipinadhikari552@gmail.com" },
-      to: [{ email: "bipinadhikari654@gmail.com", name: "Receiver" }],
-      subject: "Hello from Brevo + Node.js",
-      htmlContent: "<h1>This is a test email </h1><p>Working perfectly.</p>",
+      to: [{ email:email, name: "Receiver" }],
+      subject: "Hello from WineStroe",
+      htmlContent: `<h1>This is the OTP </h1><p>${otp}</p>`,
     };
 
     const response = await apiInstance.sendTransacEmail(emailData);
     console.log("Email sent:", response);
-
   } catch (err) {
     console.error("Error sending email:", err);
   }
 }
 
+module.exports = { sendEmail };

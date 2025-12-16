@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const OptStore=require("../models/otpStore")
 const jwt = require('jsonwebtoken');
 const {sendEmail}=require("../config/sendEmail")
 const loginUser=async (req,res) => {
@@ -49,14 +50,20 @@ const getUsers = async (req, res) => {
 const createUser = async (req, res) => {
   const { name, email, password,role } = req.body;
   try {
-    const user = new User({ name, email, password });
-   sendEmail();
-    // await user.save();
+    const user = new OptStore({ name, email, password });
+     await user.save();
+    const otp= Math.floor(1000 + Math.random() * 9000);
+      sendEmail(email,otp);
     res.status(201).json(user);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
+
+//send otp
+const sendOtp=async (req,res)=>{
+  const {email,otp} = req.body
+}
 
 module.exports = { getUsers, createUser,
 
